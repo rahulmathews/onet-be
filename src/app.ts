@@ -1,6 +1,8 @@
 import express, {Express} from 'express';
+import createError from 'http-errors';
 
 import router from './routes';
+import {ErrorHandlerUtil} from './utils';
 
 export class App{
   private app: Express;
@@ -17,6 +19,14 @@ export class App{
 
       //Initialize Router 
       this.app.use('/', router);
+
+      // catch 404 for routes which are not found and forward to error handler
+      this.app.use(function(req, res, next) {
+        next(createError(404));
+      });
+
+      //Initialize error handler
+      new ErrorHandlerUtil(this.app);
       
     }
     catch(err){

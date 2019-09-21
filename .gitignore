@@ -62,3 +62,6 @@ typings/
 
 #typescript compiled files
 dist
+
+#vscode config files
+.vscode
