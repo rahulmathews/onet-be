@@ -1,5 +1,6 @@
 import express, {Express} from 'express';
 import createError from 'http-errors';
+import helmet from 'helmet';
 
 import router from './routes';
 import {ErrorHandlerUtil, LoggerUtil} from './utils';
@@ -19,6 +20,7 @@ export class App{
       //Third Party middlewares
       this.app.use(express.json());
       this.app.use(express.urlencoded({ extended: false }));
+      this.app.use(helmet()); // for security purpose.  To set response headers
 
       //Initialize Router 
       this.app.use('/', router);
