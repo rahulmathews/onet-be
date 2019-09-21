@@ -2,7 +2,7 @@ import express, {Express} from 'express';
 import createError from 'http-errors';
 
 import router from './routes';
-import {ErrorHandlerUtil} from './utils';
+import {ErrorHandlerUtil, LoggerUtil} from './utils';
 
 export class App{
   private app: Express;
@@ -12,6 +12,9 @@ export class App{
     try{
       //Main Express App Module
       this.app = express();
+
+      //Initialize Logger
+      new LoggerUtil(this.app);
 
       //Third Party middlewares
       this.app.use(express.json());
