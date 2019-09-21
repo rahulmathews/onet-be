@@ -60,5 +60,5 @@ typings/
 # next.js build output
 .next
 
-#typescript files
-.dist/
+#typescript compiled files
+dist/
