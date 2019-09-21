@@ -1,0 +1,32 @@
+{
+  "name": "onet-be",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "prestart": "npm run build",
+    "start": "node ."
+  },
+  "description": "Express based back end for onet Test Assessment",
+  "main": "index.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rahulmathews/onet-be.git"
+  },
+  "keywords": [
+    "onet-be"
+  ],
+  "author": "Rahul Mathews",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rahulmathews/onet-be/issues"
+  },
+  "homepage": "https://github.com/rahulmathews/onet-be#readme",
+  "dependencies": {
+    "@types/express": "^4.17.1",
+    "express": "~4.16.1",
+    "typescript": "^3.6.3"
+  }
+}
