@@ -2,14 +2,8 @@ import {Request, NextFunction} from 'express';
 import * as _ from 'lodash';
 import createError from 'http-errors';
 import passport from 'passport';
-import {Schema} from 'mongoose'
 
-import {IUser} from '../interfaces';
-
-interface IUserMod extends IUser{
-    _id : Schema.Types.ObjectId,
-    id : string
-}
+import {IUserDoc} from '../interfaces';
 
 export class TokenUtil{
     constructor(){
@@ -35,7 +29,7 @@ export class TokenUtil{
 
     extractPayloadOrUserDocFromHeader = async(req : Request,param: string, next: NextFunction) => {
         try{
-            let prom : Promise<IUserMod> = new Promise(function(res, rej){
+            let prom : Promise<IUserDoc> = new Promise(function(res, rej){
                 passport.authenticate('jwt', {session : false}, function(err, user, info){
                     if(err || !user){
                         let error = createError(401, err);
