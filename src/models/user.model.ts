@@ -96,7 +96,7 @@ UserSchema.statics.updateOne = async(searchQuery : any, updateQuery : any) => {
 }
 
 //Method to remove a single document
-UserSchema.statics.removeOne = async(searchQuery : any) => {
+UserSchema.statics.deleteOne = async(searchQuery : any) => {
     return UserModel.findOneAndRemove(searchQuery);
 }
 
@@ -105,7 +105,7 @@ interface IUserModel extends Model<IUserDoc> {
     search : (searchQuery : any, options: any) => Promise<IUserDoc[]>;
     searchOne : (searchQuery : any) => Promise<IUserDoc>;
     updateOne : (searchQuery : any, updateQuery : any) => any;
-    removeOne : (searchQuery : any) => any;
+    deleteOne : (searchQuery : any) => any;
 };
 
 export const UserModel = mongoose.model<IUserDoc, IUserModel>('User', UserSchema);
