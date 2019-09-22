@@ -1,6 +1,9 @@
+import dotenv from 'dotenv';
+dotenv.config(); //load the env file here
+
 import {App} from './app';
 
-const port : any = process.env.PORT || 3000;
+const port : any = process.env.PORT || process.env.EXPRESS_PORT || 3000;
 
 //Initialize Express app
 const app = new App();

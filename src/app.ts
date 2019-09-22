@@ -2,6 +2,7 @@ import express, {Express} from 'express';
 import createError from 'http-errors';
 import helmet from 'helmet';
 
+import './datasources'; //Import connections here
 import router from './routes';
 import {ErrorHandlerUtil, LoggerUtil} from './utils';
 
