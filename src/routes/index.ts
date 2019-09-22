@@ -1,9 +1,22 @@
 import express from 'express';
-var router = express.Router();
+const router = express.Router();
 
-/* GET home page. */
+import commonRouter from './common.routes';
+import adminRouter from './admin.routes';
+import userRouter from './user.routes';
+
+/* Ping Api*/
 router.get('/ping', function(req, res, next) {
   res.send('pong');
 });
+
+/* Common Routes*/
+router.use('/common', commonRouter);
+
+/* Admin Routes*/
+router.use('/admin', adminRouter);
+
+/* User Routes*/
+router.use('/users', userRouter);
 
 export default router;

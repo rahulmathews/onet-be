@@ -18,7 +18,7 @@ export class ErrorHandlerUtil{
                 console.error(err);
                 // render the error page
                 return res.status(err.status || 500).json({message : err.message});
-              });
+            });
         }
         catch(err){
             throw err;
