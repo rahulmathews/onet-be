@@ -1,5 +1,2 @@
-//Include any one database connection
-import { MongooseUtil } from '../utils';
-
-//Initialise Mongoose Connection
-new MongooseUtil();
+//Include any one database connection and initialise it
+import { db } from '../utils';
