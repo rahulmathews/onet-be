@@ -6,11 +6,18 @@
     "build": "tsc",
     "build:watch": "tsc --watch",
     "prestart": "npm run build",
-    "start": "node ."
+    "start": "node .",
+    "test": "mocha \"dist/test/**/*.js\""
   },
   "description": "Express based back end for onet Test Assessment",
   "main": "index.js",
-  "devDependencies": {},
+  "devDependencies": {
+    "@types/chai": "^4.2.3",
+    "@types/mocha": "^5.2.7",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "mocha": "^6.2.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rahulmathews/onet-be.git"
@@ -25,20 +32,28 @@
   },
   "homepage": "https://github.com/rahulmathews/onet-be#readme",
   "dependencies": {
+    "@types/bcrypt": "^3.0.0",
     "@types/dotenv": "^6.1.1",
     "@types/express": "^4.17.1",
     "@types/helmet": "0.0.44",
     "@types/http-errors": "^1.6.2",
+    "@types/lodash": "^4.14.138",
     "@types/mongoose": "^5.5.17",
     "@types/mongoose-paginate": "^5.0.6",
     "@types/morgan": "^1.7.37",
+    "@types/request": "^2.48.3",
+    "bcrypt": "^3.0.6",
     "dotenv": "^8.1.0",
     "express": "~4.16.1",
     "helmet": "^3.21.1",
     "http-errors": "^1.7.3",
+    "lodash": "^4.17.15",
     "mongoose": "^5.7.1",
     "mongoose-paginate": "^5.0.3",
     "morgan": "^1.9.1",
     "typescript": "^3.6.3"
+  },
+  "directories": {
+    "test": "tests"
   }
 }

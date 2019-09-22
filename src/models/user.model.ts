@@ -1,15 +1,8 @@
-import mongoose, {Document, Model} from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import mongoosePaginate from 'mongoose-paginate';
 
-import {IUser, IAddress} from '../interfaces';
+import { IUserDoc, IAddressDoc } from '../interfaces';
 
-interface IAddressDoc extends IAddress, Document {
-
-};
-
-interface IUserDoc extends IUser, Document {
-
-};
 
 const AddressSchema = new mongoose.Schema<IAddressDoc>({
     name : {
@@ -39,7 +32,7 @@ const UserSchema = new mongoose.Schema<IUserDoc>({
     },
     userType : {type : String, enum : ['USER', 'ADMIN'], default : 'USER' },
     gender : {type : String, enum : ['MALE', 'FEMALE', 'OTHERS']},
-    occupation : {type : String},
+    occupation : {type : String, lowercase : true},
     emails : [{
         value : {
             type: String,
@@ -102,11 +95,17 @@ UserSchema.statics.updateOne = async(searchQuery : any, updateQuery : any) => {
     return UserModel.findOneAndUpdate(searchQuery, updateQuery);
 }
 
+//Method to remove a single document
+UserSchema.statics.removeOne = async(searchQuery : any) => {
+    return UserModel.findOneAndRemove(searchQuery);
+}
+
 interface IUserModel extends Model<IUserDoc> {
     insertUser : (userObj : any) => Promise<IUserDoc>;
     search : (searchQuery : any, options: any) => Promise<IUserDoc[]>;
     searchOne : (searchQuery : any) => Promise<IUserDoc>;
     updateOne : (searchQuery : any, updateQuery : any) => any;
+    removeOne : (searchQuery : any) => any;
 };
 
 export const UserModel = mongoose.model<IUserDoc, IUserModel>('User', UserSchema);

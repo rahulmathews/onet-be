@@ -1,3 +1,5 @@
+import {Document, Schema} from 'mongoose';
+
 export interface IAddress{
     name : string;
     street?: string;
@@ -7,3 +9,7 @@ export interface IAddress{
     country: string;
     pincode: number;
 }
+
+export interface IAddressDoc extends IAddress, Document {
+    _id: Schema.Types.ObjectId
+};

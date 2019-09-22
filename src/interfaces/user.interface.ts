@@ -1,3 +1,5 @@
+import {Document, Schema} from 'mongoose';
+
 import {IAddress} from './address.interface';
 
 export interface IUser{
@@ -5,7 +7,7 @@ export interface IUser{
     password: string;
     userType?: 'USER' | 'ADMIN';
     gender?: 'MALE' | 'FEMALE' | 'OTHERS';
-    occcupation: string;
+    occupation?: string;
     emails?: Array<{
         value : string,
         primary : boolean,
@@ -20,3 +22,7 @@ export interface IUser{
     }>;
     address?: IAddress;
 }
+
+export interface IUserDoc extends IUser, Document {
+    _id: Schema.Types.ObjectId
+};
