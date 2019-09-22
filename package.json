@@ -30,12 +30,14 @@
     "@types/helmet": "0.0.44",
     "@types/http-errors": "^1.6.2",
     "@types/mongoose": "^5.5.17",
+    "@types/mongoose-paginate": "^5.0.6",
     "@types/morgan": "^1.7.37",
     "dotenv": "^8.1.0",
     "express": "~4.16.1",
     "helmet": "^3.21.1",
     "http-errors": "^1.7.3",
     "mongoose": "^5.7.1",
+    "mongoose-paginate": "^5.0.3",
     "morgan": "^1.9.1",
     "typescript": "^3.6.3"
   }
