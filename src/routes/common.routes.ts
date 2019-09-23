@@ -92,5 +92,34 @@ commonRouter.post('/logout', authMiddleware.authJwt,
     (req, res, next) => commonController.logoutUser(req, res, next)
 )
 
+//Api to update user. Always write dynamic routes before statis routes
+
+//Api to get a single user
+commonRouter.get('/users/:userId([0-9A-Za-z]{24})',
+    authMiddleware.authJwt,
+    sessionExtractionFn,
+    (req, res, next) => commonController.getUser(req, res, next)
+);
+
+//Api to update user
+commonRouter.post('/users/:userId([0-9A-Za-z]{24})', 
+    authMiddleware.authJwt,
+    sessionExtractionFn,
+    (req, res, next) => commonController.updateUser(req, res, next)
+);
+
+//Api to set primary email for user
+commonRouter.put('/users/:userId([0-9A-Za-z]{24})/emails/:emailId([0-9A-Za-z]{24})/setPrimary', 
+    authMiddleware.authJwt,
+    sessionExtractionFn,
+    (req, res, next) => commonController.updatePrimaryEmail(req, res, next)
+);
+
+//Api to set primary phone for user
+commonRouter.put('/users/:userId([0-9A-Za-z]{24})/phones/:phoneId([0-9A-Za-z]{24})/setPrimary', 
+    authMiddleware.authJwt,
+    sessionExtractionFn,
+    (req, res, next) => commonController.updatePrimaryPhone(req, res, next)
+);
 
 export default commonRouter;
