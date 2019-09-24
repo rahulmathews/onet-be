@@ -46,6 +46,7 @@ export class CategoryController{
 
             let userId = _.get(res.locals, 'params.userId');
             let populateUser = _.get(req.query, 'populateUser') === 'true' ? true : false;
+            let populateExpense = _.get(req.query, 'populateExpense') === 'true' ? true : false;
 
             let reqQuery = _.get(req, 'query');
             let page = 1;
@@ -63,7 +64,11 @@ export class CategoryController{
             };
 
             if(populateUser){
-                paginateOptions.populate = 'userId';
+                paginateOptions.populate.push('userId');
+            }
+
+            if(populateExpense){
+                paginateOptions.populate.push('expenses');
             }
 
             let searchQuery = {
@@ -76,6 +81,104 @@ export class CategoryController{
             }
             else{
                 return res.status(204).json({message : 'Data not Found'});
+            }
+        }
+        catch(err){
+            next(err);
+        }
+    }
+
+    getCategory = async(req : Request, res : Response, next : NextFunction) => {
+        try{
+            const categoryId = req.params.categoryId;
+            let userId = _.get(res.locals, 'params.userId');
+            const reqQuery = _.get(req, 'query');
+            let populateUser = _.get(req.query, 'populateUser') === 'true' ? true : false;
+            let populateExpense = _.get(req.query, 'populateExpense') === 'true' ? true : false;
+
+            let searchObj = { 
+                userId : userId,
+                _id : categoryId
+            };
+            let paginateOptions = [];
+
+            if(populateUser){
+                paginateOptions.push({
+                    path : 'userId'
+                })
+            }
+
+            if(populateExpense){
+                paginateOptions.push({
+                    path : 'expenses'
+                })
+            }
+
+            let categoryDoc = await CategoryModel.searchOne(searchObj, paginateOptions);
+            if(categoryDoc){
+                return res.status(200).json({message : 'Data Found', data : categoryDoc});
+            }
+            else{
+                return res.status(204).json({message : 'Data not Found'});
+            }
+        }
+        catch(err){
+            next(err);
+        }
+    }
+
+    deleteCategory = async(req : Request, res : Response, next : NextFunction) => {
+        try{
+            const categoryId = req.params.categoryId;
+            let userId = _.get(res.locals, 'params.userId');
+
+            let deleteObj = { 
+                userId : userId,
+                _id : categoryId
+            };
+
+            let categoryDoc = await CategoryModel.deleteOne(deleteObj);
+            if(categoryDoc){
+                return res.status(200).json({message : 'Category delete Successfully'});
+            }
+            else{
+                return res.status(204).json({message : 'Category Deletion Failed'});
+            }
+        }
+        catch(err){
+            next(err);
+        }
+    }
+
+    updateCategory = async(req : Request, res : Response, next : NextFunction) => {
+        try{
+            const {name} = _.get(req, 'body');
+
+            if(_.isNil(_.get(req.body, 'name'))){
+                let err = createError(400, 'name is either null or undefined');
+                return next(err);
+            };
+
+            const categoryId = req.params.categoryId;
+            let userId = _.get(res.locals, 'params.userId');
+
+            let searchObj = {
+                userId : userId,
+                _id : categoryId
+            };
+
+            let updateObj = {
+                $set : {
+                    name : name
+                }
+            };
+
+            let categoryDoc = await CategoryModel.updateOne(searchObj, updateObj);
+            if(categoryDoc){
+                return res.status(200).json({message : 'Category Updated Successfully'});
+            }
+            else{
+                return res.status(204).json({message : 'Category Updation Failed'});
             }
         }
         catch(err){

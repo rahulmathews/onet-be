@@ -71,11 +71,32 @@ catergoryRouter.get('/',
     (req, res, next) => categoryController.getAllCategories(req, res, next)
 );
 
+//Api to get a single category
+catergoryRouter.get('/:categoryId([0-9A-Za-z]{24})',
+    authMiddleware.authJwt,
+    sessionExtractionFn,
+    (req, res, next) => categoryController.getCategory(req, res, next)
+);
+
 //Api to add a new category
 catergoryRouter.post('/',
     authMiddleware.authJwt,
     sessionExtractionFn,
     (req, res, next) => categoryController.addCategory(req, res, next)
+);
+
+//Api to update a single category
+catergoryRouter.post('/:categoryId([0-9A-Za-z]{24})',
+    authMiddleware.authJwt,
+    sessionExtractionFn,
+    (req, res, next) => categoryController.updateCategory(req, res, next)
+);
+
+//Api to delete category
+catergoryRouter.delete('/:categoryId([0-9A-Za-z]{24})',
+    authMiddleware.authJwt,
+    sessionExtractionFn,
+    (req, res, next) => categoryController.deleteCategory(req, res, next)
 );
 
 
