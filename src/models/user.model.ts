@@ -92,7 +92,7 @@ UserSchema.statics.searchOne = async(searchQuery : any) => {
 
 //Method to update a single document
 UserSchema.statics.updateOne = async(searchQuery : any, updateQuery : any) => {
-    return UserModel.findOneAndUpdate(searchQuery, updateQuery);
+    return UserModel.findOneAndUpdate(searchQuery, updateQuery, {new : true});
 }
 
 //Method to remove a single document

@@ -10,7 +10,9 @@ const ExpenseSchema = new mongoose.Schema<IExpenseDoc>({
         lowercase : true
     },
     categoryId : {type : Schema.Types.ObjectId, ref: 'Category'},
-    amount : {type : Number}
+    userId : {type : Schema.Types.ObjectId, ref: 'User'},
+    amount : {type : Number},
+    deleted : {type : Boolean, default : false}
 }, {timestamps : true});
 
 //Schema setters
@@ -38,13 +40,13 @@ ExpenseSchema.statics.search = async(searchQuery : any, options: any) => {
 }
 
 //Method to search for single document
-ExpenseSchema.statics.searchOne = async(searchQuery : any) => {
-    return ExpenseModel.findOne(searchQuery);
+ExpenseSchema.statics.searchOne = async(searchQuery : any, options?: any) => {
+    return ExpenseModel.findOne(searchQuery).populate(options);
 }
 
 //Method to update a single document
 ExpenseSchema.statics.updateOne = async(searchQuery : any, updateQuery : any) => {
-    return ExpenseModel.findOneAndUpdate(searchQuery, updateQuery);
+    return ExpenseModel.findOneAndUpdate(searchQuery, updateQuery, {new : true});
 }
 
 //Method to remove a single document
@@ -54,8 +56,8 @@ ExpenseSchema.statics.deleteOne = async(searchQuery : any) => {
 
 interface IExpenseModel extends Model<IExpenseDoc> {
     insertExpense : (userObj : any) => Promise<IExpenseDoc>;
-    search : (searchQuery : any, options: any) => Promise<IExpenseDoc[]>;
-    searchOne : (searchQuery : any) => Promise<IExpenseDoc>;
+    search : (searchQuery : any, options: any) => Promise<any>;
+    searchOne : (searchQuery : any, options?: any) => Promise<IExpenseDoc>;
     updateOne : (searchQuery : any, updateQuery : any) => any;
     deleteOne : (searchQuery : any) => any;
 };

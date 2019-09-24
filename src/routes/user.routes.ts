@@ -26,7 +26,7 @@ const idVerificationMiddleware = async(req: Request, res: Response, next: NextFu
                 return next();
             })
             .catch(function(err){
-                throw err;
+                next(err);
             })
         })
         return next();

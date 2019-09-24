@@ -4,6 +4,7 @@ import * as _ from 'lodash';
 
 const catergoryRouter = express.Router();
 
+import expenseRouter from './expense.routes';
 import {CategoryController} from '../controllers';
 import {SessionMiddleware, AuthMiddleware} from '../middlewares';
 import {CategoryModel} from '../models';
@@ -38,11 +39,11 @@ const idVerificationMiddleware = async(req: Request, res: Response, next: NextFu
                     let error = createError(400, 'Invalid Category Id');
                     throw error
                 }
-                _.set(res.locals, 'categoryDoc', categoryDoc);
+                _.set(res.locals, 'docs.categoryDoc', categoryDoc);
                 return next();
             })
             .catch(function(err){
-                throw err;
+                next(err);
             })
         })
         return next();
@@ -99,5 +100,16 @@ catergoryRouter.delete('/:categoryId([0-9A-Za-z]{24})',
     (req, res, next) => categoryController.deleteCategory(req, res, next)
 );
 
+
+
+catergoryRouter.use('/:categoryId([0-9A-Za-z]{24})/expenses', 
+    (req:any, res, next) => {
+        //@ts-ignore
+        _.merge(res.locals.params, req.params);
+        // req.paramsRetained = req.params;
+        next();
+    },
+    expenseRouter
+);
 
 export default catergoryRouter;

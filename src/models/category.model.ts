@@ -10,8 +10,12 @@ const CategorySchema = new mongoose.Schema<ICategoryDoc>({
         lowercase : true
     },
     userId : {type : Schema.Types.ObjectId, ref: 'User'},
-    expenses : [{type : Schema.Types.ObjectId, ref: 'Expense'}],
-    total : {type: Number}
+    expenses : [{
+        expenseId : {type : Schema.Types.ObjectId, ref: 'Expense'},
+        deleted : {type : Boolean, default : false}
+    }],
+    total : {type: Number},
+    deleted : {type : Boolean, default: false}
     
 }, {timestamps : true});
 
@@ -48,7 +52,7 @@ CategorySchema.statics.searchOne = async(searchQuery : any, options?: any) => {
 
 //Method to update a single document
 CategorySchema.statics.updateOne = async(searchQuery : any, updateQuery : any) => {
-    return CategoryModel.findOneAndUpdate(searchQuery, updateQuery);
+    return CategoryModel.findOneAndUpdate(searchQuery, updateQuery, {new : true});
 }
 
 //Method to remove a single document
@@ -58,7 +62,7 @@ CategorySchema.statics.deleteOne = async(searchQuery : any) => {
 
 interface ICategoryModel extends Model<ICategoryDoc> {
     insertCategory : (userObj : any) => Promise<ICategoryDoc>;
-    search : (searchQuery : any, options: any) => Promise<ICategoryDoc[]>;
+    search : (searchQuery : any, options: any) => Promise<any>;
     searchOne : (searchQuery : any, options?: any) => Promise<ICategoryDoc>;
     updateOne : (searchQuery : any, updateQuery : any) => any;
     deleteOne : (searchQuery : any) => any;

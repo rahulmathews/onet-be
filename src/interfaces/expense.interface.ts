@@ -3,6 +3,7 @@ import {Document, Schema} from 'mongoose';
 export interface IExpense{
     name: string;
     categoryId : Schema.Types.ObjectId;
+    userId : Schema.Types.ObjectId;
     amount: number;
 }
 

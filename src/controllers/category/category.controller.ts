@@ -76,7 +76,7 @@ export class CategoryController{
             };
 
             let categoryDocs = await CategoryModel.search(searchQuery, paginateOptions);
-            if(categoryDocs){
+            if(!_.isEmpty(categoryDocs.docs)){
                 return res.status(200).json({message : 'Data Found', data : categoryDocs});
             }
             else{
@@ -139,7 +139,7 @@ export class CategoryController{
 
             let categoryDoc = await CategoryModel.deleteOne(deleteObj);
             if(categoryDoc){
-                return res.status(200).json({message : 'Category delete Successfully'});
+                return res.status(200).json({message : 'Category deleted Successfully'});
             }
             else{
                 return res.status(204).json({message : 'Category Deletion Failed'});
@@ -154,11 +154,6 @@ export class CategoryController{
         try{
             const {name} = _.get(req, 'body');
 
-            if(_.isNil(_.get(req.body, 'name'))){
-                let err = createError(400, 'name is either null or undefined');
-                return next(err);
-            };
-
             const categoryId = req.params.categoryId;
             let userId = _.get(res.locals, 'params.userId');
 
@@ -172,6 +167,12 @@ export class CategoryController{
                     name : name
                 }
             };
+
+            Object.keys(updateObj.$set).forEach((key) => {
+                if(!updateObj.$set[key]){
+                    delete updateObj.$set[key]
+                }
+            })
 
             let categoryDoc = await CategoryModel.updateOne(searchObj, updateObj);
             if(categoryDoc){
