@@ -2,7 +2,7 @@ import {Request, Response, NextFunction} from 'express';
 import * as _ from 'lodash';
 import createError from 'http-errors';
 
-import {CategoryModel} from '../../models';
+import {CategoryModel, ExpenseModel} from '../../models';
 import {ICategory} from '../../interfaces';
 
 export class CategoryController{
@@ -64,11 +64,16 @@ export class CategoryController{
             };
 
             if(populateUser){
-                paginateOptions.populate.push('userId');
+                paginateOptions.populate.push({path : 'userId'});
             }
 
             if(populateExpense){
-                paginateOptions.populate.push('expenses');
+                paginateOptions.populate.push({
+                    path : 'expenses.expenseId',
+                    match : {
+                        'deleted' : false
+                    }
+                });
             }
 
             let searchQuery = {
@@ -110,7 +115,10 @@ export class CategoryController{
 
             if(populateExpense){
                 paginateOptions.push({
-                    path : 'expenses'
+                    path : 'expenses.expenseId',
+                    match : {
+                        'deleted' : false
+                    }
                 })
             }
 
@@ -139,7 +147,29 @@ export class CategoryController{
 
             let categoryDoc = await CategoryModel.deleteOne(deleteObj);
             if(categoryDoc){
-                return res.status(200).json({message : 'Category deleted Successfully'});
+                let expenseIds = _.map(_.filter(categoryDoc.expenses, function(Obj){
+                    if(Obj.deleted === false){
+                        return true;
+                    }
+                }), 'expenseId');
+                
+                let result = await ExpenseModel.findOneAndUpdate({
+                    _id : {
+                        $in : expenseIds
+                    }
+                }, {$set : {deleted : true}}); //Update Expense Model
+
+                _.map(categoryDoc.expenses, function(Obj){
+                    Obj.deleted = true;
+                })
+
+                let updatedDoc = await categoryDoc.save();
+                if(updatedDoc){
+                    return res.status(200).json({message : 'Category deleted Successfully'});    
+                }
+                else{
+                    return res.status(204).json({message : 'Category Deletion Failed'});
+                }
             }
             else{
                 return res.status(204).json({message : 'Category Deletion Failed'});

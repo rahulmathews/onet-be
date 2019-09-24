@@ -1,5 +1,6 @@
 import mongoose, { Model, Schema } from 'mongoose';
 import mongoosePaginate from 'mongoose-paginate';
+import * as _ from 'lodash';
 
 import { IExpenseDoc } from '../interfaces';
 
@@ -33,7 +34,8 @@ ExpenseSchema.statics.insertExpense = async(userObj : any) =>{
 }
 
 //Method to search for any query
-ExpenseSchema.statics.search = async(searchQuery : any, options: any) => {
+ExpenseSchema.statics.search = async(searchQuery : any, options?: any) => {
+    searchQuery = _.assign(searchQuery, {'deleted' : false});
     //@ts-ignore
     return ExpenseModel.paginate(searchQuery, options);
     // return UserModel.find(searchQuery);
@@ -41,6 +43,7 @@ ExpenseSchema.statics.search = async(searchQuery : any, options: any) => {
 
 //Method to search for single document
 ExpenseSchema.statics.searchOne = async(searchQuery : any, options?: any) => {
+    searchQuery = _.assign(searchQuery, {'deleted' : false});
     return ExpenseModel.findOne(searchQuery).populate(options);
 }
 
@@ -51,12 +54,17 @@ ExpenseSchema.statics.updateOne = async(searchQuery : any, updateQuery : any) =>
 
 //Method to remove a single document
 ExpenseSchema.statics.deleteOne = async(searchQuery : any) => {
-    return ExpenseModel.findOneAndRemove(searchQuery);
+    // return ExpenseModel.findOneAndRemove(searchQuery);
+    return ExpenseModel.findOneAndUpdate(searchQuery, {
+        $set : {
+            'deleted' : true
+        }
+    });
 }
 
 interface IExpenseModel extends Model<IExpenseDoc> {
     insertExpense : (userObj : any) => Promise<IExpenseDoc>;
-    search : (searchQuery : any, options: any) => Promise<any>;
+    search : (searchQuery : any, options?: any) => Promise<any>;
     searchOne : (searchQuery : any, options?: any) => Promise<IExpenseDoc>;
     updateOne : (searchQuery : any, updateQuery : any) => any;
     deleteOne : (searchQuery : any) => any;

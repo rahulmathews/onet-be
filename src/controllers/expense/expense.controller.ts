@@ -43,7 +43,9 @@ export class ExpenseController{
                         total : amount
                     },
                     $push : {
-                        expenses : expenseDoc.id
+                        expenses : {
+                            expenseId : expenseDoc.id
+                        }
                     }
                 }
                 let categoryDoc = await CategoryModel.updateOne({_id: categoryId}, updateQuery);
@@ -229,10 +231,18 @@ export class ExpenseController{
                 let updateQuery = {
                     $inc : {
                         total : updatedAmount
+                    },
+                    $set : {
+                        "expenses.$.deleted" : true
                     }
                 };
 
-                let categoryDoc = await CategoryModel.updateOne({_id: categoryId}, updateQuery);
+                let searchQuery = {
+                    "_id" : categoryId,
+                    "expenses.expenseId" : expenseId
+                }
+
+                let categoryDoc = await CategoryModel.updateOne(searchQuery, updateQuery);
                 if(categoryDoc){
                     return res.status(200).json({message : 'Expense deleted Successfully'});
                 }

@@ -1,5 +1,6 @@
 import mongoose, { Model, Schema } from 'mongoose';
 import mongoosePaginate from 'mongoose-paginate';
+import * as _ from 'lodash';
 
 import { ICategoryDoc } from '../interfaces';
 
@@ -40,6 +41,7 @@ CategorySchema.statics.insertCategory = async(userObj : any) =>{
 
 //Method to search for any query
 CategorySchema.statics.search = async(searchQuery : any, options: any) => {
+    searchQuery = _.assign(searchQuery, {'deleted' : false});
     //@ts-ignore
     return CategoryModel.paginate(searchQuery, options);
     // return UserModel.find(searchQuery);
@@ -47,6 +49,7 @@ CategorySchema.statics.search = async(searchQuery : any, options: any) => {
 
 //Method to search for single document
 CategorySchema.statics.searchOne = async(searchQuery : any, options?: any) => {
+    searchQuery = _.assign(searchQuery, {'deleted' : false});
     return CategoryModel.findOne(searchQuery).populate(options);
 }
 
@@ -57,7 +60,12 @@ CategorySchema.statics.updateOne = async(searchQuery : any, updateQuery : any) =
 
 //Method to remove a single document
 CategorySchema.statics.deleteOne = async(searchQuery : any) => {
-    return CategoryModel.findOneAndRemove(searchQuery);
+    // return CategoryModel.findOneAndRemove(searchQuery);
+    return CategoryModel.findOneAndUpdate(searchQuery, {
+        $set : {
+            'deleted' : true
+        },
+    });
 }
 
 interface ICategoryModel extends Model<ICategoryDoc> {
